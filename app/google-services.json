@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "183085413135",
+    "firebase_url": "https://serverdrivenuiexample-29365-default-rtdb.firebaseio.com",
+    "project_id": "serverdrivenuiexample-29365",
+    "storage_bucket": "serverdrivenuiexample-29365.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:183085413135:android:f85de8dd0a98719658047a",
+        "android_client_info": {
+          "package_name": "com.vk.directop.serverdrivenuiexample"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6joaTRSnq0Idu6Hey25biRlQnZVBgkDU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:183085413135:android:10a9c84e0a958bd958047a",
+        "android_client_info": {
+          "package_name": "com.vk.directop.serverdrivenuiexamplepv"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6joaTRSnq0Idu6Hey25biRlQnZVBgkDU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
