@@ -40,6 +40,36 @@ class MainActivityViewModel : ViewModel() {
         )
     }
 
+    fun generateInitialContent() {
+        val newId = UUID.randomUUID()
+        newDataNode.child("$newId").setValue(
+            NewsItem(
+                id = "\"$newId\"",
+                title = "\"Initial post\"",
+                description = "\"This post added into firebase realtime database\"",
+                favorite = false,
+            )
+        )
+        layoutNode.child("layout_3").setValue(
+            MyLayout(
+                columns = 1,
+                type = "list"
+            )
+        )
+        layoutNode.child("layout_4").setValue(
+            MyLayout(
+                columns = 3,
+                type = "grid"
+            )
+        )
+        metaNode.setValue(
+            Meta(
+                canFavorite = false,
+                mode = "\"layout_4\""
+            )
+        )
+    }
+
     //Firebase models
     data class NewsItem(
         val id: String = "",
@@ -52,6 +82,11 @@ class MainActivityViewModel : ViewModel() {
     data class Meta(
         val canFavorite: Boolean = false,
         val mode: String = "",
+    )
+
+    data class MyLayout(
+        val columns: Int = 2,
+        val type: String = "grid",
     )
 
     //Firebase flows

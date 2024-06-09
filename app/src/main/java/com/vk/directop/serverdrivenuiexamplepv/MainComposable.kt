@@ -40,7 +40,7 @@ fun MainComposable(
 ) {
     val layoutInformation by viewModel.layoutInformationFlow.collectAsState()
     when (layoutInformation) {
-        null -> LoadingComponent()
+        null -> LoadingComponent(addNewItemClick = { viewModel.generateInitialContent() },)
         else -> NewsFeedScreen(layoutInformation = layoutInformation!!,
             addNewItemClick = { viewModel.onAddNewItemClick() },
         )
@@ -111,9 +111,14 @@ fun NewsFeedScreen(
 
 
 @Composable
-fun LoadingComponent() {
+fun LoadingComponent(
+    addNewItemClick: () -> Unit
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(text = "Loading...")
+        Button(onClick = { addNewItemClick() }) {
+            Text(text = "Generate initial content")
+        }
         //        CircularProgressIndicator(
 //            modifier = Modifier
 //                .size(50.dp)
