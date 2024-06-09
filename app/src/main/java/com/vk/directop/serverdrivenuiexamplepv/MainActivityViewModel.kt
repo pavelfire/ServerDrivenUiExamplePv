@@ -16,32 +16,28 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import java.time.LocalDateTime
+import java.util.UUID
 
 class MainActivityViewModel : ViewModel() {
 
     private val realtimeDatabase = Firebase.database
-    private val dataNode = realtimeDatabase.getReference("ui/data")
+    private val dataNode = realtimeDatabase.getReference("ui/newdata")
     private val layoutNode = realtimeDatabase.getReference("ui/layout")
     private val metaNode = realtimeDatabase.getReference("ui/meta")
 
-//    val myRef = realtimeDatabase.getReference("message")
+    val newDataNode = realtimeDatabase.getReference("ui/newdata")
 
-    init {
-        //myRef.setValue("Hello, World! PV 080624")
-
-//        myRef.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//                val value = dataSnapshot.getValue<String>()
-//                Log.d("myTag", "Value is: $value")
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                // Failed to read value
-//                Log.w("myTag", "Failed to read value.", error.toException())
-//            }
-//        })
+    fun onAddNewItemClick() {
+        val newId = UUID.randomUUID()
+        newDataNode.child("$newId").setValue(
+            NewsItem(
+                id = "\"$newId\"",
+                title = "\"On fly added 2\"",
+                description = "\"after pressing button added ${LocalDateTime.now()}\"",
+                favorite = false,
+            )
+        )
     }
 
     //Firebase models
@@ -49,7 +45,8 @@ class MainActivityViewModel : ViewModel() {
         val id: String = "",
         val title: String = "",
         val description: String = "",
-        val isFavorite: Boolean = false,
+        val favorite: Boolean = false,
+        val favorites: String = "false"
     )
 
     data class Meta(
@@ -62,9 +59,10 @@ class MainActivityViewModel : ViewModel() {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val newsItems = snapshot.children.map {
+                    Log.d("myTag", "it = $it")
                     it.getValue<NewsItem>()!!
-                        .copy(isFavorite = it.children.find {
-                            it.key == "isFavorite"
+                        .copy(favorite = it.children.find {
+                            it.key == "favorite"
                         }!!.getValue<Boolean>()!!.run {
                             return@run this == true
                         })

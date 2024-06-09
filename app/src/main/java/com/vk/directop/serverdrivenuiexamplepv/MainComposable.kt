@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +41,9 @@ fun MainComposable(
     val layoutInformation by viewModel.layoutInformationFlow.collectAsState()
     when (layoutInformation) {
         null -> LoadingComponent()
-        else -> NewsFeedScreen(layoutInformation = layoutInformation!!)
+        else -> NewsFeedScreen(layoutInformation = layoutInformation!!,
+            addNewItemClick = { viewModel.onAddNewItemClick() },
+        )
     }
 }
 
@@ -61,38 +64,48 @@ data class LayoutInformation(
 
 @Composable
 fun NewsFeedScreen(
-    layoutInformation: LayoutInformation
+    layoutInformation: LayoutInformation,
+    addNewItemClick: () -> Unit
 ) {
-    when (layoutInformation.layoutMeta.layoutType) {
-        is LayoutType.List -> {
-            LazyColumn(
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(items = layoutInformation.layoutData, key = { newsItem -> newsItem.id }) {
-                    NewsItemComponent(
-                        newsItem = it,
-                        favoriteEnabled = layoutInformation.layoutMeta.favoriteEnabled
-                    )
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Button(onClick = { addNewItemClick() }) {
+            Text(text = "Add new item")
+        }
+        when (layoutInformation.layoutMeta.layoutType) {
+            is LayoutType.List -> {
+                LazyColumn(
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(items = layoutInformation.layoutData, key = { newsItem -> newsItem.id }) {
+                        NewsItemComponent(
+                            newsItem = it,
+                            favoriteEnabled = layoutInformation.layoutMeta.favoriteEnabled
+                        )
+                    }
+                }
+            }
+
+            is LayoutType.Grid -> {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(layoutInformation.layoutMeta.layoutType.columns),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(items = layoutInformation.layoutData, key = { newsItem -> newsItem.id }) {
+                        NewsItemComponent(
+                            newsItem = it,
+                            favoriteEnabled = layoutInformation.layoutMeta.favoriteEnabled
+                        )
+                    }
                 }
             }
         }
 
-        is LayoutType.Grid -> {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(layoutInformation.layoutMeta.layoutType.columns),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(items = layoutInformation.layoutData, key = { newsItem -> newsItem.id }) {
-                    NewsItemComponent(
-                        newsItem = it,
-                        favoriteEnabled = layoutInformation.layoutMeta.favoriteEnabled
-                    )
-                }
-            }
-        }
+
     }
 }
 
@@ -128,7 +141,7 @@ fun NewsItemComponent(
             Spacer(modifier = Modifier.weight(1f))
             if (favoriteEnabled) {
                 val icon =
-                    if (newsItem.isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
+                    if (newsItem.favorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
                 Icon(imageVector = icon,
                     contentDescription = "Favorite",
                     modifier = Modifier.clickable {
