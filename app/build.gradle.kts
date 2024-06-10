@@ -70,12 +70,10 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.1")
 
-    // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
-    // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
-//    implementation("com.google.firebase:firebase-messaging:24.0.0")
     implementation("com.google.firebase:firebase-database")
-    // Add the dependencies for any other desired Firebase products
-    // https://firebase.google.com/docs/android/setup#available-libraries
+
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.8.1")
+
 }
